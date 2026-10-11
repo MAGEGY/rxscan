@@ -2,8 +2,18 @@ import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { parseMedicinesCsv, searchMedicines } from './lib/medicineSearch'
 import type { Medicine, OcrLine } from './lib/types'
+import FloatingHelp from './components/FloatingHelp'
+import type { HelpHowTo } from './components/FloatingHelp'
 
 type Status = 'loading-db' | 'idle' | 'camera' | 'ocr' | 'done' | 'error'
+
+const HELP_HOWTOS: HelpHowTo[] = [
+  { title: 'Scan a prescription', body: 'Tap "Start camera", point at the prescription and tap "Capture & scan" — or upload a photo. The first scan downloads the OCR model (10-15 MB), afterwards it is instant.' },
+  { title: 'Fix misread lines', body: 'Each recognized line appears in an editable list. Click any line to fix the text — matches update automatically after every edit. Use the trash button to remove a junk line, and "Re-match" to search again.' },
+  { title: 'How matching works', body: 'Your text is split into tokens and fuzzy-matched (Levenshtein distance <= 3) against 1,071 Egyptian medicines by brand name and composition. Words that match more tokens and with smaller edit distance rank first; the top 10 matches are shown.' },
+  { title: 'Print the matches', body: 'Tap "Print matches" to open the print dialog — the report shows the recognized lines and the matched medicines with prices in EGP. Use it at the pharmacy counter.' },
+  { title: 'Language', body: 'Pick English or Arabic OCR before scanning. Arabic prescriptions need the Arabic model (downloaded on first use).' },
+]
 
 export default function App() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -198,6 +208,16 @@ export default function App() {
       )}
 
       <footer className="footer">Prices in EGP from the bundled database. Verify with a pharmacist.</footer>
+      <FloatingHelp
+        color="#7c3aed"
+        functions={[
+          { label: 'Scan a prescription', description: 'Start the camera or upload a photo and run OCR', action: () => { setStatus('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }) } },
+          { label: 'Edit recognized lines', description: 'Fix misread text — matches update automatically', action: () => document.querySelector('.line-list')?.scrollIntoView({ behavior: 'smooth' }) },
+          { label: 'Print matches', description: 'Print the recognized lines and matched medicines with prices', action: () => window.print() },
+          { label: 'Medicine database', description: `${db.length} Egyptian medicines with brand, composition and EGP price`, action: () => setStatus((s) => s) },
+        ]}
+        howtos={HELP_HOWTOS}
+      />
     </div>
   )
 }
