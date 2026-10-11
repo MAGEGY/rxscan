@@ -211,10 +211,9 @@ export default function App() {
       <FloatingHelp
         color="#7c3aed"
         functions={[
-          { label: 'Scan a prescription', description: 'Start the camera or upload a photo and run OCR', action: () => { setStatus('idle'); window.scrollTo({ top: 0, behavior: 'smooth' }) } },
+          { label: 'Scan a prescription', description: 'Start the camera or upload a photo and run OCR', action: () => startCamera() },
           { label: 'Edit recognized lines', description: 'Fix misread text — matches update automatically', action: () => document.querySelector('.line-list')?.scrollIntoView({ behavior: 'smooth' }) },
           { label: 'Print matches', description: 'Print the recognized lines and matched medicines with prices', action: () => window.print() },
-          { label: 'Medicine database', description: `${db.length} Egyptian medicines with brand, composition and EGP price`, action: () => setStatus((s) => s) },
         ]}
         howtos={HELP_HOWTOS}
       />
