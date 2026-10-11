@@ -15,12 +15,13 @@ interface Props {
   functions: HelpFunction[]
   howtos?: HelpHowTo[]
   color?: string
+  rtl?: boolean
 }
 
-// Self-contained floating help: circular button (bottom-right) opens a
-// searchable panel listing the app's functions (click = navigate/act)
-// and step-by-step how-tos. Same UX as the PharmaPOS help search.
-export default function FloatingHelp({ functions, howtos = [], color = '#0e7490' }: Props) {
+// Self-contained floating help: circular button (bottom-right, or bottom-left
+// for RTL languages) opens a searchable panel listing the app's functions
+// (click = navigate/act) and step-by-step how-tos. Same UX as PharmaPOS.
+export default function FloatingHelp({ functions, howtos = [], color = '#0e7490', rtl = false }: Props) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [expanded, setExpanded] = useState<number | null>(null)
@@ -57,7 +58,7 @@ export default function FloatingHelp({ functions, howtos = [], color = '#0e7490'
         title="Help & Guide"
         aria-label="Help & Guide"
         style={{
-          position: 'fixed', bottom: 16, right: 16, zIndex: 70,
+          position: 'fixed', bottom: 16, ...(rtl ? { left: 16 } : { right: 16 }), zIndex: 70,
           width: 48, height: 48, borderRadius: '50%', border: 'none',
           background: color, color: '#fff', cursor: 'pointer',
           boxShadow: '0 4px 12px rgba(0,0,0,0.25)', display: 'flex',
